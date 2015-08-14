@@ -1,0 +1,20 @@
+#peopleColumn{
+	position: absolute;
+	top: 3em;
+	bottom: 10px;
+	width: 300px;
+	float: left;
+	border-style: solid;
+	border-color: black;
+}
+
+#messagesColumn{
+	position: absolute;
+	top: 3em;
+	bottom: 10px;
+	left: 310px;
+	right: 10px;
+	float: left;
+	border-style: solid;
+	border-color: black;
+}

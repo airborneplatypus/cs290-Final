@@ -1,8 +1,9 @@
-var loginBtn = document.getElementById("loginBtn");
-var usernameField = document.getElementById("username");
-var passwordField = document.getElementById("password");
+var people = document.getElementById("people");
+var messages = document.getElementById("messages");
 
-loginBtn.onclick = function(){
+/*loadPeople();
+
+function loadPeople(){
 	var request = new XMLHttpRequest();
 	request.open("POST", "message.php", true);
 	//console.log(JSON.stringify(m));
@@ -25,4 +26,4 @@ loginBtn.onclick = function(){
 			}
 		}
 	}
-}
+}*/

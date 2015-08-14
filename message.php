@@ -14,7 +14,7 @@ mysqli_select_db($mysqli_handle, $dbname)
 	or die("Error selecting database: $dbname");
 
 //echo 'Successfully connected to database!';
-
+session_save_path(dirname("sessions"));
 session_start();
 
 if(session_status() == PHP_SESSION_ACTIVE){
@@ -29,10 +29,11 @@ if(session_status() == PHP_SESSION_ACTIVE){
 			$response = [];
 			$row = $result->fetch_array(MYSQLI_NUM);
 			if(password_verify($post_request->password, $row[2])){
+				$_SESSION["loggedIn"] = 1;
 				$_SESSION["id"] = $row[0];
 				$_SESSION["name"] = $row[1];
 				$_SESSION["password"] = $row[2];
-				echo "logged in";//Change this to generate page
+				echo "success";
 			}
 			else{
 				echo "Invalid username or password.";
@@ -71,34 +72,6 @@ if(session_status() == PHP_SESSION_ACTIVE){
 				$response[] = $current_row;
 			}
 			echo json_encode($response);
-			else{
-				echo "Invalid username or password.";
-			}
-		} else {
-			echo "Invalid username or password.";// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
-		}
-	}
-	elseif ($post_request->function == "getNew" && isset($_SESSION["id"])) {
-		$stmt = $mysqli_handle->prepare("SELECT * FROM cs290FinalMessages WHERE receiver = ? AND timeViewed = NULL");
-		$stmt->bind_param("s", $_SESSION["id"]);
-
-		if ($stmt->execute()) {
-			$result = $stmt->get_result();
-			$response = [];
-			while($row = $result->fetch_array(MYSQLI_NUM)){
-				$current_row = [];
-				$current_row['id'] = $row[0];
-				$current_row['sender'] = $row[1];
-				$current_row['receiver'] = $row[2];
-				$current_row['content'] = $row[3];
-				$current_row['sent'] = $row[4];
-				$current_row['viewed'] = $row[5];
-				$response[] = $current_row;
-			}
-			echo json_encode($response);
-			else{
-				echo "Error.";
-			}
 		} else {
 			echo "Error.";// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
 		}
@@ -121,9 +94,6 @@ if(session_status() == PHP_SESSION_ACTIVE){
 				$response[] = $current_row;
 			}
 			echo json_encode($response);
-			else{
-				echo "Error.";
-			}
 		} else {
 			echo ("Error.");// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
 		}
@@ -139,6 +109,24 @@ if(session_status() == PHP_SESSION_ACTIVE){
 			echo "Error.";// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
 		}
 	}
+	/*elseif ($post_request->function == "acceptFriend" && isset($_SESSION["id"])) {
+		if($result = $mysqli_handle->query("SELECT * FROM cs290FinalUsers WHERE id = $_SESSION['id']")){
+			$response = [];
+			while($row = $result->fetch_array(MYSQLI_NUM)){
+				$current_row = [];
+				$current_row['id'] = $row[0];
+				$current_row['sender'] = $row[1];
+				$current_row['receiver'] = $row[2];
+				$current_row['content'] = $row[3];
+				$current_row['sent'] = $row[4];
+				$current_row['viewed'] = $row[5];
+				$response[] = $current_row;
+			}
+			echo json_encode($response);
+		} else {
+			echo ("Error.");// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
+		}
+	}//Work in progress*/
 }
 
 mysqli_close($mysqli_handle);
