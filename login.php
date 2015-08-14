@@ -6,6 +6,11 @@ ini_set('display_errors', 1);
 echo "<html>\n";
 echo "<head>\n";
 echo "<title> Login </title>\n";
+echo "<style>
+	h1{
+		text-align:center;
+		font-family: \"Arial\", Helvetica, sans-serif;
+	}";
 echo "</head>\n";
 echo "<body>\n";
 echo "<br>\n";
@@ -14,6 +19,7 @@ echo "<br>\n";
 echo "<br>\n";
 echo "<br>\n";
 /*http://web.engr.oregonstate.edu/~osterbit/2/repo/class-content/form_tests/Formtest.php*/
+echo "<h1>Messenger</h1>";
 echo "<table style=\"margin: auto\">\n";
 echo "<tr>\n";
 echo "<td>Login Name:</td>\n";

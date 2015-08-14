@@ -18,12 +18,12 @@ if(session_status() == PHP_SESSION_ACTIVE){
 					</tr>
 				</table>
 				<div id="peopleColumn">
-				<h4>Friends</h4>
+				<h4 align="center">Friends</h4>
 				<ul id="people">
 				</ul>
 				</div>
 				<div id="messagesColumn">
-				<h4>Messages</h4>
+				<h4 align="center">Messages</h4>
 				<ul id="messages">
 				</ul>
 				</div>
