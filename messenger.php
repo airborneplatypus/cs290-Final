@@ -11,16 +11,23 @@ if(session_status() == PHP_SESSION_ACTIVE){
 				<link rel="stylesheet" href="style.css">
 			</head>
 			<body>
-				<h3>Messenger</h3>
+				<table style="width:100%">
+					<tr>
+						<td>Request Friend:<input id="newFriend" type="text"><button id="requestBtn">Send Request</button></td>
+						<td style="text-align:right"><a href="logout.php">logout</a></td>
+					</tr>
+				</table>
 				<div id="peopleColumn">
+				<h4>Friends</h4>
 				<ul id="people">
 				</ul>
 				</div>
 				<div id="messagesColumn">
+				<h4>Messages</h4>
 				<ul id="messages">
 				</ul>
 				</div>
-				<script type="text/javascript" src="messanger.js"></script>
+				<script type="text/javascript" src="messenger.js"></script>
 			</body>
 		</html>
 		<?php

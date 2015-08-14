@@ -17,7 +17,7 @@ loginBtn.onclick = function(){
 					alert(request.responseText);
 				}
 				else{
-					window.location.assign("messanger.php");
+					window.location.assign("messenger.php");
 				}
 			}
 			else{
