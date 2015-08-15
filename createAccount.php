@@ -9,6 +9,7 @@ echo "<style>
 	h1{
 		text-align:center;
 		font-family: \"Arial\", Helvetica, sans-serif;
+		color: rgb(0,0,255);
 	}";
 echo "<title> Create Account </title>\n";
 echo "</head>\n";
