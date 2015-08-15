@@ -10,6 +10,7 @@ echo "<style>
 	h1{
 		text-align:center;
 		font-family: \"Arial\", Helvetica, sans-serif;
+		color: rgb(0,0,255);
 	}";
 echo "</head>\n";
 echo "<body>\n";
@@ -19,7 +20,7 @@ echo "<br>\n";
 echo "<br>\n";
 echo "<br>\n";
 /*http://web.engr.oregonstate.edu/~osterbit/2/repo/class-content/form_tests/Formtest.php*/
-echo "<h1>Messenger</h1>";
+echo "<img src = \"images/everywhere.jpg\" align=\"middle\"";
 echo "<table style=\"margin: auto\">\n";
 echo "<tr>\n";
 echo "<td>Login Name:</td>\n";

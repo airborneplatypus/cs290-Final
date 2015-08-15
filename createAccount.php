@@ -9,6 +9,7 @@ echo "<style>
 	h1{
 		text-align:center;
 		font-family: \"Arial\", Helvetica, sans-serif;
+		color: rgb(0,0,255);
 	}";
 echo "<title> Create Account </title>\n";
 echo "</head>\n";
@@ -16,7 +17,7 @@ echo "<body>\n";
 echo "<br>\n";
 echo "<br>\n";
 echo "<br>\n";
-echo "<h1>Messenger</h1>";
+echo "<img src = \"images/createaccount.jpg\" align=\"middle\"";
 /*http://web.engr.oregonstate.edu/~osterbit/2/repo/class-content/form_tests/Formtest.php*/
 echo "<center><h4 id=\"Title\">Account Creation</h4></center>\n";
 echo "<table id=\"accountTable\" style=\"margin: auto\">\n";
