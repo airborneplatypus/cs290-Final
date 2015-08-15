@@ -35,6 +35,7 @@ if(session_status() == PHP_SESSION_ACTIVE){
 	}
 	$post_request = json_decode(file_get_contents('php://input'));
 	$now = new DateTime();
+	$current_time = $now->format('y-m-d H:i:s');
 	if($post_request->function == "login"){
 		$stmt = $mysqli_handle->prepare("SELECT * FROM cs290FinalUsers WHERE name = ?");
 		$stmt->bind_param("s", $post_request->username);
@@ -111,6 +112,19 @@ if(session_status() == PHP_SESSION_ACTIVE){
 				$response[] = $current_row;
 			}
 			echo json_encode($response);
+			//$viewedStmt = $mysqli_handle->prepare("SELECT * FROM cs290FinalMessages WHERE ( sender = ? AND receiver = ? AND timeViewed = null )");
+			$viewedStmt = $mysqli_handle->prepare("UPDATE cs290FinalMessages SET timeViewed = ? WHERE sender = ? AND receiver = ?");
+			if($viewedStmt){
+				$viewedStmt->bind_param("sss", $current_time, $post_request->otherPerson, $_SESSION["id"]);
+				//$viewedStmt->bind_param("ss", $post_request->otherPerson, $_SESSION["id"]);
+				$viewedStmt->execute();
+				//$result = $viewedStmt->get_result();
+				//$row = $result->fetch_array(MYSQLI_NUM);
+				//var_dump($row);
+			}
+			else{
+				echo "No message. ". mysqli_error($mysqli_handle);
+			}
 		}
 		else {
 			echo ("Error.");
@@ -118,7 +132,7 @@ if(session_status() == PHP_SESSION_ACTIVE){
 	}
 	elseif ($post_request->function == "sendMessage" && isset($_SESSION["id"])) {
 		$stmt = $mysqli_handle->prepare("INSERT INTO cs290FinalMessages ( sender, receiver, content, timeSent ) VALUES ( ?, ?, ?, ?)");
-		$stmt->bind_param("ssss", $_SESSION["id"], $post_request->otherPerson, $post_request->content, $now->format('y-m-d H:i:s'));
+		$stmt->bind_param("ssss", $_SESSION["id"], $post_request->otherPerson, $post_request->content, $current_time);
 
 		if ($stmt->execute()) {
 			$result = $stmt->get_result();
