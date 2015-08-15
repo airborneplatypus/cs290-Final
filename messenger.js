@@ -7,9 +7,15 @@ var toSend = document.getElementById("toSend");
 
 var myFriends = [];
 var myRequests = [];
-var currentPerson;
+var currentPerson = null;
 
 getFriends();
+setInterval(function(){
+	getFriends();
+	if(currentPerson != null){
+		getConversation(currentPerson);
+	}
+},10000)
 
 function person(){
 	this.name = '';
@@ -80,6 +86,9 @@ function message(){
 
 	this.makeHTML = function(){
 		var li = document.createElement("li");
+		if(this.sender == currentPerson){
+			li.className = "otherMessage";	
+		}
 		var text = document.createTextNode(this.content + " | Sent: " + this.sent);
 		li.appendChild(text);
 		messages.appendChild(li);

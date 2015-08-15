@@ -6,12 +6,12 @@ ini_set('display_errors', 1);
 echo "<html>\n";
 echo "<head>\n";
 echo "<title> Login </title>\n";
-echo "<style>
+/*echo "<style>
 	h1{
 		text-align:center;
 		font-family: \"Arial\", Helvetica, sans-serif;
 		color: rgb(0,0,255);
-	}";
+	}</style>\n";*/
 echo "</head>\n";
 echo "<body>\n";
 echo "<br>\n";
@@ -20,7 +20,7 @@ echo "<br>\n";
 echo "<br>\n";
 echo "<br>\n";
 /*http://web.engr.oregonstate.edu/~osterbit/2/repo/class-content/form_tests/Formtest.php*/
-echo "<img src = \"images/everywhere.jpg\" align=\"middle\"";
+//echo "<img src = \"images/everywhere.jpg\" align=\"middle\"";
 echo "<table style=\"margin: auto\">\n";
 echo "<tr>\n";
 echo "<td>Login Name:</td>\n";
