@@ -19,7 +19,7 @@ echo "<br>\n";
 echo "<br>\n";
 echo "<br>\n";
 /*http://web.engr.oregonstate.edu/~osterbit/2/repo/class-content/form_tests/Formtest.php*/
-echo "<img src = \"unnamed.jpg\" align=\"middle\"";
+echo "<img src = \"images/everywhere.jpg\" align=\"middle\"";
 echo "<table style=\"margin: auto\">\n";
 echo "<tr>\n";
 echo "<td>Login Name:</td>\n";

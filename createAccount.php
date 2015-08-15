@@ -16,7 +16,7 @@ echo "<body>\n";
 echo "<br>\n";
 echo "<br>\n";
 echo "<br>\n";
-echo "<img src = \"unnamed.jpg\" align=\"middle\"";
+echo "<img src = \"images/createaccount.jpg\" align=\"middle\"";
 /*http://web.engr.oregonstate.edu/~osterbit/2/repo/class-content/form_tests/Formtest.php*/
 echo "<center><h4 id=\"Title\">Account Creation</h4></center>\n";
 echo "<table id=\"accountTable\" style=\"margin: auto\">\n";
