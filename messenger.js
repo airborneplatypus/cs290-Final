@@ -68,6 +68,27 @@ function getConversation(otherPerson){//Other person is the person's id
 	}
 }
 
+function acceptDenyFriend(otherPerson, accept){//accept = 1 to accept request, 0 to deny
+	var request = new XMLHttpRequest();
+	request.open("POST", "message.php", true);
+	//console.log(JSON.stringify(m));
+	request.send(JSON.stringify({"function" : "acceptFriend", "otherPerson" : otherPerson, "accept": accept}));
+	//console.log(m);
+	request.onreadystatechange = function(){
+		if (request.readyState === 4){
+			if(request.status === 200){
+				console.log(request.responseText);
+				/* Fill in with frontend stuff.
+				** update friends list
+				*/
+			}
+			else{
+				alert("Error! " + request.status);
+			}
+		}
+	}
+}
+
 requestBtn.onclick = function(){
 	var request = new XMLHttpRequest();
 	request.open("POST", "message.php", true);

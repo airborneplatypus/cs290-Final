@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 
 session_save_path(dirname("sessions"));
 session_start();
-header("Refresh:3; URL=login.php");
+header("Refresh:2; URL=login.php");
 
 echo "<center>";
 

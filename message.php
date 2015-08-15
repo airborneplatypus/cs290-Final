@@ -130,23 +130,30 @@ if(session_status() == PHP_SESSION_ACTIVE){
 	}
 	elseif ($post_request->function == "acceptFriend" && isset($_SESSION["id"])) {
 		$id = $_SESSION['id'];
+		$accept = $post_request->accept;
 		$result = $mysqli_handle->query("SELECT * FROM cs290FinalUsers WHERE id = $id");
 		if($result){
 			$row = $result->fetch_assoc();
+			var_dump($row);
 			$friends = json_decode($row['friends']);
 			$friendRequests = json_decode($row['friendRequests']);
-			$requester = $post_request->requester;
+			$requester = $post_request->otherPerson;
 			if(in_array($requester, $friendRequests)){
-				$stmt = $mysqli_handle->prepare("SELECT friends FROM cs290FinalUsers WHERE id = ?");
-				$stmt->bind_param("i", $requester);
-				if ($stmt->execute()) {
-					$result = $stmt->get_result();
-					$requesterFriendsJSON = $result->fetch_array(MYSQLI_NUM);
-					$requesterFriends = json_decode($requesterFriendsJSON[0]);
-					var_dump($requesterFriends);
+				if(($key = array_search($requester, $friendRequests)) !== false) {
+					unset($friendRequests[$key]);
 				}
-				else {
-					echo "Error.";
+				if($post_request->accept){
+					$friends[] = $requester;
+				}
+				$friendsJSON = json_encode($friends);
+				$requestsJSON = json_encode($friendRequests);
+				$stmt = $mysqli_handle->prepare("UPDATE cs290FinalUsers SET friends = ?, friendRequests = ? WHERE id = ?");
+				$stmt->bind_param("ssi", $friendsJSON, $requestsJSON, $id);
+				if($stmt->execute()){
+					echo "success";
+				}
+				else{
+					echo "error". $mysqli_handle->error;
 				}
 			}
 			else{
@@ -177,7 +184,7 @@ if(session_status() == PHP_SESSION_ACTIVE){
 				echo "Error: Can't send request.";
 			}
 		} else {
-			echo ("Error.");// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
+			echo ("Error: ");// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
 		}
 	}
 	elseif ($post_request->function == "getFriends" && isset($_SESSION["id"])) {
