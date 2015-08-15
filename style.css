@@ -6,6 +6,7 @@
 	float: left;
 	border-style: solid;
 	border-color: black;
+	overflow: scroll;
 }
 
 #messagesColumn{
@@ -17,6 +18,7 @@
 	float: left;
 	border-style: solid;
 	border-color: black;
+	overflow: scroll;
 }
 
 #sendBar{
@@ -33,6 +35,6 @@ h1{
 	color: rgb(0,0,255);
 }
 
-.otherMessage{
-	background-color: #b0c4ee;
+.btn-danger{
+	background-color: red;
 }
