@@ -26,6 +26,9 @@ if(session_status() == PHP_SESSION_ACTIVE){
 					<h4>Messages</h4>
 					<ul id="messages">
 					</ul>
+					<div id="sendBar">
+						<input id="toSend" type="text" onkeydown="if (event.keyCode == 13) document.getElementById('sendMessage').click()"><button id="sendMessage">Send</button>
+					</div>
 				</div>
 				<script type="text/javascript" src="messenger.js"></script>
 			</body>

@@ -2,6 +2,89 @@ var people = document.getElementById("people");
 var messages = document.getElementById("messages");
 var requestBtn = document.getElementById("requestBtn");
 var newFriend = document.getElementById("newFriend");
+var sendBtn = document.getElementById("sendMessage");
+var toSend = document.getElementById("toSend");
+
+var myFriends = [];
+var myRequests = [];
+var currentPerson;
+
+getFriends();
+
+function person(){
+	this.name = '';
+	this.id = '';
+
+	this.setPerson = function(nameIn, idIn){
+		this.name = nameIn;
+		this.id = idIn;
+	}
+
+	this.makeHTML = function(friend){
+		var myId = this.id;
+		if(friend){
+			var li = document.createElement("li");
+			var text = document.createTextNode(this.name);
+			li.appendChild(text);
+			people.appendChild(li);
+			var messageBtn = document.createElement("button");
+			messageBtn.onclick = function(){
+				getConversation(myId);
+				currentPerson = myId;
+			}
+			text = document.createTextNode("talk");
+			messageBtn.appendChild(text);
+			li.appendChild(messageBtn);
+		}
+		else{
+			var li = document.createElement("li");
+			var text = document.createTextNode(this.name);
+			li.appendChild(text);
+			var friendBtn = document.createElement("button");
+			friendBtn.className = "btn";
+			var text = document.createTextNode('accept');
+			friendBtn.appendChild(text);
+			friendBtn.onclick = function(){
+				acceptDenyFriend(myId,1);
+				getFriends();
+			}
+			li.appendChild(friendBtn);
+			var denyBtn = document.createElement("button");
+			denyBtn.className = "btn btn-danger";
+			text = document.createTextNode('deny');
+			denyBtn.appendChild(text);
+			denyBtn.onclick = function(){
+				acceptDenyFriend(myId,0);
+				getFriends();
+			}
+			li.appendChild(denyBtn);
+		}
+		people.appendChild(li);
+	}
+}
+
+function message(){
+	this.sender = '';
+	this.receiver = '';
+	this.content = '';
+	this.sent = '';
+	this.viewed = '';
+
+	this.setMessage = function(sender, receiver, content, sent, viewed){
+		this.sender = sender;
+		this.receiver = receiver;
+		this.content = content;
+		this.sent = sent;
+		this.viewed = viewed;
+	}
+
+	this.makeHTML = function(){
+		var li = document.createElement("li");
+		var text = document.createTextNode(this.content + " | Sent: " + this.sent);
+		li.appendChild(text);
+		messages.appendChild(li);
+	}
+}
 
 function getFriends(){
 	var request = new XMLHttpRequest();
@@ -19,6 +102,7 @@ function getFriends(){
 				** If user clicks on friend, bring them to messages with friend.
 				** If user clicks on friend request, give them option to accept request.
 				*/
+				genFriends(JSON.parse(request.responseText));
 			}
 			else{
 				alert("Error! " + request.status);
@@ -38,6 +122,7 @@ function sendMessage(otherPerson, content){//Other person is the person's id
 			if(request.status === 200){
 				console.log(request.responseText);
 				//Let user know message is sent?
+				getConversation(otherPerson);
 			}
 			else{
 				alert("Error! " + request.status);
@@ -60,6 +145,7 @@ function getConversation(otherPerson){//Other person is the person's id
 				** responseText returns in format [{"id":messageId, "sender":sendersID, "receiver":yourId,
 				** "content":messageContent, "sent":timeSent, "viewed":timeViewed }{next message of same format as first}]
 				*/
+				genConversation(JSON.parse(request.responseText));
 			}
 			else{
 				alert("Error! " + request.status);
@@ -134,4 +220,41 @@ requestBtn.onclick = function(){
 			}
 		}
 	}
+}
+
+function genFriends(friendsList){
+	while(people.firstChild){
+		people.removeChild(people.firstChild);
+	}
+	myFriends = friendsList.friends;
+	myRequests = friendsList.friendRequests;
+	myFriends.forEach(function(individual){
+		var friend = new person();
+		friend.setPerson(individual.name, individual.id);
+		friend.makeHTML(1);
+	})
+	myRequests.forEach(function(individual){
+		var friend = new person();
+		friend.setPerson(individual.name, individual.id);
+		friend.makeHTML(0);
+	})
+}
+
+function genConversation(conversationList){
+	while(messages.firstChild){
+		messages.removeChild(messages.firstChild);
+	}
+	conversationList.forEach(function(individual){
+		var sender = new person();
+		sender.setPerson(individual.sender.name, individual.sender.id);
+		var receiver = new person();
+		receiver.setPerson(individual.receiver.name, individual.receiver.id);
+		var current = new message();
+		current.setMessage(sender, receiver, individual.content, individual.sent, individual.viewed);
+		current.makeHTML();
+	})
+}
+
+sendBtn.onclick = function(){
+	sendMessage( currentPerson, toSend.value);
 }
