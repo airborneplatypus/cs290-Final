@@ -23,7 +23,7 @@ if(session_status() == PHP_SESSION_ACTIVE){
 					</ul>
 				</div>
 				<div id="messagesColumn">
-					<h4>Messages</h4>
+					<h4 id="messageTitle">Click "talk" next to your friend to start a conversation,</h4>
 					<ul id="messages">
 					</ul>
 					<div id="sendBar">

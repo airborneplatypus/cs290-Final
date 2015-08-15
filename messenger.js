@@ -4,10 +4,13 @@ var requestBtn = document.getElementById("requestBtn");
 var newFriend = document.getElementById("newFriend");
 var sendBtn = document.getElementById("sendMessage");
 var toSend = document.getElementById("toSend");
+var messageTitle = document.getElementById("messageTitle");
 
 var myFriends = [];
 var myRequests = [];
+var waiting = [];
 var currentPerson = null;
+var currentName = null;
 
 getFriends();
 setInterval(function(){
@@ -28,6 +31,7 @@ function person(){
 
 	this.makeHTML = function(friend){
 		var myId = this.id;
+		var myName = this.name;
 		if(friend){
 			var li = document.createElement("li");
 			var text = document.createTextNode(this.name);
@@ -37,6 +41,7 @@ function person(){
 			messageBtn.onclick = function(){
 				getConversation(myId);
 				currentPerson = myId;
+				currentName = myName;
 			}
 			text = document.createTextNode("talk");
 			messageBtn.appendChild(text);
@@ -56,7 +61,7 @@ function person(){
 			}
 			li.appendChild(friendBtn);
 			var denyBtn = document.createElement("button");
-			denyBtn.className = "btn btn-danger";
+			denyBtn.className = "btn-danger";
 			text = document.createTextNode('deny');
 			denyBtn.appendChild(text);
 			denyBtn.onclick = function(){
@@ -86,10 +91,7 @@ function message(){
 
 	this.makeHTML = function(){
 		var li = document.createElement("li");
-		if(this.sender == currentPerson){
-			li.className = "otherMessage";	
-		}
-		var text = document.createTextNode(this.content + " | Sent: " + this.sent);
+		var text = document.createTextNode(this.content + " | Sent By: " + this.sender.name + " | " + this.sent);
 		li.appendChild(text);
 		messages.appendChild(li);
 	}
@@ -104,7 +106,7 @@ function getFriends(){
 	request.onreadystatechange = function(){
 		if (request.readyState === 4){
 			if(request.status === 200){
-				console.log(request.responseText);
+				//console.log(request.responseText);
 				/* Fill in with frontend stuff.
 				** Returns array of arrays.  Each subArray has 'name' and associated 'id'
 				** Make list of friends and friend requests.
@@ -129,7 +131,7 @@ function sendMessage(otherPerson, content){//Other person is the person's id
 	request.onreadystatechange = function(){
 		if (request.readyState === 4){
 			if(request.status === 200){
-				console.log(request.responseText);
+				//console.log(request.responseText);
 				//Let user know message is sent?
 				getConversation(otherPerson);
 			}
@@ -149,7 +151,7 @@ function getConversation(otherPerson){//Other person is the person's id
 	request.onreadystatechange = function(){
 		if (request.readyState === 4){
 			if(request.status === 200){
-				console.log(request.responseText);
+				//console.log(request.responseText);
 				/* Fill in with frontend stuff.
 				** responseText returns in format [{"id":messageId, "sender":sendersID, "receiver":yourId,
 				** "content":messageContent, "sent":timeSent, "viewed":timeViewed }{next message of same format as first}]
@@ -172,7 +174,7 @@ function getNew(otherPerson){//Other person is the person's id
 	request.onreadystatechange = function(){
 		if (request.readyState === 4){
 			if(request.status === 200){
-				console.log(request.responseText);
+				//console.log(request.responseText);
 				/* Fill in with frontend stuff.
 				** responseText returns in format [{"id":messageId, "sender":sendersID, "receiver":yourId,
 				** "content":messageContent, "sent":timeSent, "viewed":timeViewed }{next message of same format as first}]
@@ -194,7 +196,7 @@ function acceptDenyFriend(otherPerson, accept){//accept = 1 to accept request, 0
 	request.onreadystatechange = function(){
 		if (request.readyState === 4){
 			if(request.status === 200){
-				console.log(request.responseText);
+				//console.log(request.responseText);
 				/* Fill in with frontend stuff.
 				** update friends list
 				*/
@@ -221,7 +223,8 @@ requestBtn.onclick = function(){
 					alert(request.responseText);
 				}
 				else{
-					console.log("success");
+					alert("Request Sent");
+					//console.log("success");
 				}
 			}
 			else{
@@ -250,6 +253,9 @@ function genFriends(friendsList){
 }
 
 function genConversation(conversationList){
+	if(currentPerson != null){
+		messageTitle.textContent = "Messaging " + currentName;
+	}
 	while(messages.firstChild){
 		messages.removeChild(messages.firstChild);
 	}
@@ -266,4 +272,5 @@ function genConversation(conversationList){
 
 sendBtn.onclick = function(){
 	sendMessage( currentPerson, toSend.value);
+	toSend.value = "";
 }
