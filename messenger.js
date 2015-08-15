@@ -68,6 +68,28 @@ function getConversation(otherPerson){//Other person is the person's id
 	}
 }
 
+function getNew(otherPerson){//Other person is the person's id
+	var request = new XMLHttpRequest();
+	request.open("POST", "message.php", true);
+	//console.log(JSON.stringify(m));
+	request.send(JSON.stringify({"function" : "getNew"}));
+	//console.log(m);
+	request.onreadystatechange = function(){
+		if (request.readyState === 4){
+			if(request.status === 200){
+				console.log(request.responseText);
+				/* Fill in with frontend stuff.
+				** responseText returns in format [{"id":messageId, "sender":sendersID, "receiver":yourId,
+				** "content":messageContent, "sent":timeSent, "viewed":timeViewed }{next message of same format as first}]
+				*/
+			}
+			else{
+				alert("Error! " + request.status);
+			}
+		}
+	}
+}
+
 function acceptDenyFriend(otherPerson, accept){//accept = 1 to accept request, 0 to deny
 	var request = new XMLHttpRequest();
 	request.open("POST", "message.php", true);

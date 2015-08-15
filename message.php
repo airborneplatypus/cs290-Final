@@ -72,7 +72,7 @@ if(session_status() == PHP_SESSION_ACTIVE){
 		}
 	}
 	elseif ($post_request->function == "getNew" && isset($_SESSION["id"])) {
-		$stmt = $mysqli_handle->prepare("SELECT * FROM cs290FinalMessages WHERE receiver = ? AND timeViewed = NULL");
+		$stmt = $mysqli_handle->prepare("SELECT * FROM cs290FinalMessages WHERE receiver = ? AND ISNULL(timeViewed)");
 		$stmt->bind_param("s", $_SESSION["id"]);
 
 		if ($stmt->execute()) {
@@ -91,7 +91,7 @@ if(session_status() == PHP_SESSION_ACTIVE){
 			echo json_encode($response);
 		}
 		else {
-			echo "Error.";
+			echo "Error." . $mysqli_handle->error;
 		}
 	}
 	elseif ($post_request->function == "getConversation" && isset($_SESSION["id"])) {
@@ -112,18 +112,12 @@ if(session_status() == PHP_SESSION_ACTIVE){
 				$response[] = $current_row;
 			}
 			echo json_encode($response);
-			//$viewedStmt = $mysqli_handle->prepare("SELECT * FROM cs290FinalMessages WHERE ( sender = ? AND receiver = ? AND timeViewed = null )");
-			$viewedStmt = $mysqli_handle->prepare("UPDATE cs290FinalMessages SET timeViewed = ? WHERE sender = ? AND receiver = ?");
+
+			//Setting messages to be viewed at current time
+			$viewedStmt = $mysqli_handle->prepare("UPDATE cs290FinalMessages SET timeViewed = ? WHERE sender = ? AND receiver = ? AND ISNULL(timeViewed)");
 			if($viewedStmt){
 				$viewedStmt->bind_param("sss", $current_time, $post_request->otherPerson, $_SESSION["id"]);
-				//$viewedStmt->bind_param("ss", $post_request->otherPerson, $_SESSION["id"]);
 				$viewedStmt->execute();
-				//$result = $viewedStmt->get_result();
-				//$row = $result->fetch_array(MYSQLI_NUM);
-				//var_dump($row);
-			}
-			else{
-				echo "No message. ". mysqli_error($mysqli_handle);
 			}
 		}
 		else {
