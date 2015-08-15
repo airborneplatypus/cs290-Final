@@ -18,3 +18,10 @@
 	border-style: solid;
 	border-color: black;
 }
+
+#sendBar{
+	position: absolute;
+	height: 1.2em;
+	bottom: 1px;
+	left: 1px;
+}

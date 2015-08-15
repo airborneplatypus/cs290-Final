@@ -33,6 +33,39 @@ if(session_status() == PHP_SESSION_ACTIVE){
 			return NULL;
 		}
 	}
+	function changeFriend($post_request, $id, $requester, $mysqli_handle){
+		
+		$result = $mysqli_handle->query("SELECT * FROM cs290FinalUsers WHERE id = $id");
+		if($result){
+			$row = $result->fetch_assoc();
+			var_dump($row);
+			$friends = json_decode($row['friends']);
+			$friendRequests = json_decode($row['friendRequests']);
+			
+			if(($key = array_search($requester, $friendRequests)) !== false) {
+				unset($friendRequests[$key]);
+			}
+			if($post_request->accept){
+				if(!in_array($requester, $friends)){
+					$friends[] = $requester;
+				}
+			}
+			$friendsJSON = json_encode($friends);
+			$requestsJSON = json_encode($friendRequests);
+			
+			$stmt = $mysqli_handle->prepare("UPDATE cs290FinalUsers SET friends = ?, friendRequests = ? WHERE id = ?");
+			$stmt->bind_param("ssi", $friendsJSON, $requestsJSON, $id);
+			if($stmt->execute()){
+				echo "success";
+			}
+			else{
+				echo "error". $mysqli_handle->error;
+			}
+		}
+		else {
+			echo ("Error.");// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
+		}
+	}
 	$post_request = json_decode(file_get_contents('php://input'));
 	$now = new DateTime();
 	$current_time = $now->format('y-m-d H:i:s');
@@ -81,8 +114,13 @@ if(session_status() == PHP_SESSION_ACTIVE){
 			while($row = $result->fetch_array(MYSQLI_NUM)){
 				$current_row = [];
 				$current_row['id'] = $row[0];
-				$current_row['sender'] = $row[1];
-				$current_row['receiver'] = $row[2];
+				$person = [];
+				$person['id'] = $row[1];
+				$person['name'] = idToName($row[1], $mysqli_handle);
+				$current_row['sender'] = $person;
+				$person['id'] = $row[2];
+				$person['name'] = idToName($row[2], $mysqli_handle);
+				$current_row['receiver'] = $person;
 				$current_row['content'] = $row[3];
 				$current_row['sent'] = $row[4];
 				$current_row['viewed'] = $row[5];
@@ -104,8 +142,13 @@ if(session_status() == PHP_SESSION_ACTIVE){
 			while($row = $result->fetch_array(MYSQLI_NUM)){
 				$current_row = [];
 				$current_row['id'] = $row[0];
-				$current_row['sender'] = $row[1];
-				$current_row['receiver'] = $row[2];
+				$person = [];
+				$person['id'] = $row[1];
+				$person['name'] = idToName($row[1], $mysqli_handle);
+				$current_row['sender'] = $person;
+				$person['id'] = $row[2];
+				$person['name'] = idToName($row[2], $mysqli_handle);
+				$current_row['receiver'] = $person;
 				$current_row['content'] = $row[3];
 				$current_row['sent'] = $row[4];
 				$current_row['viewed'] = $row[5];
@@ -139,38 +182,9 @@ if(session_status() == PHP_SESSION_ACTIVE){
 	elseif ($post_request->function == "acceptFriend" && isset($_SESSION["id"])) {
 		$id = $_SESSION['id'];
 		$accept = $post_request->accept;
-		$result = $mysqli_handle->query("SELECT * FROM cs290FinalUsers WHERE id = $id");
-		if($result){
-			$row = $result->fetch_assoc();
-			var_dump($row);
-			$friends = json_decode($row['friends']);
-			$friendRequests = json_decode($row['friendRequests']);
-			$requester = $post_request->otherPerson;
-			if(in_array($requester, $friendRequests)){
-				if(($key = array_search($requester, $friendRequests)) !== false) {
-					unset($friendRequests[$key]);
-				}
-				if($post_request->accept){
-					$friends[] = $requester;
-				}
-				$friendsJSON = json_encode($friends);
-				$requestsJSON = json_encode($friendRequests);
-				$stmt = $mysqli_handle->prepare("UPDATE cs290FinalUsers SET friends = ?, friendRequests = ? WHERE id = ?");
-				$stmt->bind_param("ssi", $friendsJSON, $requestsJSON, $id);
-				if($stmt->execute()){
-					echo "success";
-				}
-				else{
-					echo "error". $mysqli_handle->error;
-				}
-			}
-			else{
-				echo "Error:  Cannot find friend request.";
-			}
-		}
-		else {
-			echo ("Error.");// . $mysqli_handle->error// . " " . mysqli_errno($mysqli_handle)
-		}
+		$requester = $post_request->otherPerson;
+		changeFriend($post_request, $id, $requester, $mysqli_handle);
+		changeFriend($post_request, $requester, $id, $mysqli_handle);
 	}
 	elseif ($post_request->function == "sendRequest" && isset($_SESSION["id"])) {
 		$id = $_SESSION['id'];
